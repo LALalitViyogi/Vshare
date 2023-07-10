@@ -4,7 +4,7 @@ from flask import redirect, url_for
 application = Flask(__name__)
 
 @application.route('/')
-def home():
+def Dash():
     return render_template("home.html")
 
 @application.route('/files')
