@@ -6,6 +6,44 @@ from datetime import datetime
 from flask import render_template, flash
 #import hashlib
 
+def get_profile_name(id):
+    with open("profiles.json","r") as file:
+        profiles = json.load(file)
+        for i in profiles['profiles']:
+            if i["id"]== id:
+                return i["Name"]
+
+def get_username(id):
+    with open("profiles.json","r") as file:
+        profiles = json.load(file)
+        for i in profiles['profiles']:
+            if i["id"]== id:
+                return i["userName"]
+
+def get_id(userName):
+    with open("profiles.json","r") as file:
+        profiles = json.load(file)
+        for i in profiles['profiles']:
+            if i["userName"]== userName:
+                return i["id"]
+
+def get_info_by_id(id):
+    with open("profiles.json","r") as file:
+        profiles = json.load(file)
+        for i in profiles['profiles']:
+            if i["id"]== id:
+                del i['Password']
+                return i
+
+def get_info_by_userName(userName):
+    with open("profiles.json","r") as file:
+        profiles = json.load(file)
+        for i in profiles['profiles']:
+            if i["userName"]== userName:
+                del i['Password']
+                return i
+
+
 def check_uuid(uuid_no):
     if uuid is None:
         return None
@@ -44,15 +82,13 @@ def add_profile(Name, Email, Password, prof_id=None):
         
         is_new=True
         #print("new profile to be add"+ Name +" " +str(prof_id))
-            
-        
-    
+                 
     if is_new :
         profile = {
             "id":str(prof_id),
             "Name":Name,
             "userName":Email,
-            "Created on":str(datetime.now()),
+            "Created on":str(datetime.now().strftime("%d-%m-%y %H:%M:%S")),
             "Password":str(Password),
             }
         try:
@@ -70,9 +106,10 @@ def add_profile(Name, Email, Password, prof_id=None):
 
 if __name__ == "__main__":
     name = input("Enter Name:")
-    Email = input("\nEnter Email:")
-    Password = input("\nEnter password:")
-    add_profile(name,Email=Email,Password=Password)
+    print(get_info_by_userName(name))
+    #Email = input("\nEnter Email:")
+    #Password = input("\nEnter password:")
+    #add_profile(name,Email=Email,Password=Password)
 
 
 

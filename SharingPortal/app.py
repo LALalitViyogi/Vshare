@@ -8,11 +8,11 @@ application.secret_key ="ab2a3a7f-d830-441b-bca3-6c4fe12e7774"
 
 @application.route('/')
 def Dash():
-    return render_template("home.html")
+    return render_template("get_message.html")
 
 @application.route('/files')
 def file_page():
-    return render_template("file.html")
+    return render_template("text_file.html")
 
 @application.route('/login')
 def Login():
@@ -29,4 +29,5 @@ def Signup():
         return render_template('Signup.html',msg=None)
 
 if __name__ == "__main__":
-    application.run(debug=True)
+    application.run(debug=True,host='0.0.0.0')
+    print("Working")
