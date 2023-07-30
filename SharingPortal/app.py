@@ -1,14 +1,23 @@
 from flask import Flask, render_template, request 
 from flask import redirect, url_for,session
+from datetime import datetime
 
 from insert_data import add_profile
 
 application = Flask(__name__)
 application.secret_key ="ab2a3a7f-d830-441b-bca3-6c4fe12e7774"
 
-@application.route('/')
+def get_time():
+    return datetime.now().strftime("%d-%m-%y %H:%M:%S")
+
+@application.route('/',methods = ['GET','POST'])
 def Dash():
-    return render_template("get_message.html")
+    if request.method == 'POST':
+        text = request.form['textarea']
+        print(text)
+        return render_template("get_message.html", value=get_time())
+    else:
+        return render_template("get_message.html", value=get_time())
 
 @application.route('/files')
 def file_page():
@@ -17,6 +26,7 @@ def file_page():
 @application.route('/login')
 def Login():
     return render_template('login.html', Name="Login", msg=None)
+
 
 @application.route('/Signup',methods = ['GET','POST'])
 def Signup():
