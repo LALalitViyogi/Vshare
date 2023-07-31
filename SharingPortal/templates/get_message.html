@@ -3,40 +3,52 @@
 <script src="{{url_for('static',filename='get_msg.js')}}"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
-    setInterval(data_reload,10000);
+    setInterval(data_reload,30000);
 
     function data_reload(){
       $("#timer").load("{{url_for('Dash')}} #timer")
     }
+   
     function count_char(){
         var counter = $("#textarea").val().length;
         //console.log(counter);
         document.getElementById("current_count").textContent=counter;
-        
+              
     }
+
+    // script for checking input in text area
+    
+    function check_input(){
+            var counter = $("#textarea").val().length;
+            if(counter > 7){
+                document.getElementById("submitbtn").disabled = false;
+                //document.getElementById("submitbtn").getElementsByClassName"bg-blue-600";
+                document.getElementById("submitbtn").classList.add("hover:bg-blue-700");
+            }
+            else{
+                document.getElementById("submitbtn").disabled = true;
+                //document.getElementById("submitbtn").style.backgroundColor = "bg-blue-400";
+                document.getElementById("submitbtn").classList.remove("hover:bg-blue-700");
+            }  
+    }
+    function work(){
+        count_char();
+        check_input();
+    }
+
 </script>
 {%endblock jscript%}
 {% block content %}
 <h3 id="timer"class="my-2"> Last Update :{{value}}</h3>
 <div class="mb-4">
+    {% for msg in data %}
     <div class="flex mb-4">
         <div class="flex-1 w-full rounded-xl bg-gray-200 h-18">
-            <p class="mx-8 my-5 float-left">1</p>
+            <p class="mx-8 my-5 float-left">{{msg['message']}}</p>
             <button type="button" class="float-right mx-8 my-6">Copy Text</button>
         </div>
     </div>
-    <div class="flex mb-4">
-        <div class="flex-1 w-full rounded-xl bg-gray-200 h-18">
-            <p class="mx-8 my-5 float-left">2</p>
-            <button type="button" class="float-right mx-8 my-6">Copy Text</button>
-        </div>
-    </div>
-    <div class="flex mb-4">
-        <div class="flex-1 w-full rounded-xl bg-gray-200 h-18">
-            <p class="mx-8 my-5 float-left">3</p>
-            <button type="button" class="float-right mx-8 my-6">Copy Text</button>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 
 <div class="mx-2">
@@ -44,8 +56,8 @@
     <label for="label_message" class="block mb-2 text-m font-medium text-gray-900 dark:text-white">
         Add Your message
     </label>
-    <textarea  id="textarea" name="textarea" onkeyup="count_char()" rows="8" minlength="5" maxlength="250" class="block my-2  h-20 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
-    <button type="submit" class="bg-blue-500 w-48 float-left my-1 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+    <textarea  id="textarea" name="textarea" onkeyup="work()" rows="8" minlength="8" maxlength="250" class="block my-2  h-20 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+    <button type="submit" disabled="disabled" id="submitbtn" class=" w-48 bg-blue-400 float-left my-1  text-white font-bold py-2 px-4 rounded-full">
         Submit
     </button>
     <div id="count" class="float-right">

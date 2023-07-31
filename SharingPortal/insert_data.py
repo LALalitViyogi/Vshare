@@ -3,7 +3,7 @@ import sys
 import uuid
 import json
 from datetime import datetime
-from flask import render_template, flash
+from flask import render_template, flash,redirect
 #import hashlib
 
 def get_profile_name(id):
@@ -61,6 +61,18 @@ def check_uuid(uuid_no):
             return False
     else:
         return False
+def update_data():
+    curr = datetime.now()
+    with open('messages.json','r') as file:
+        data = json.load(file)
+        file.close()
+
+        with open('messages.json','w') as file:
+            for jobject in data['links']:
+                jobject['value']= int((curr - datetime.strptime(jobject['time'],"%d-%m-%y %H:%M:%S")).total_seconds())
+            
+            json.dump(data,file,indent=4)
+            file.close()
 
 def add_profile(Name, Email, Password, prof_id=None):
     is_new = False
@@ -104,9 +116,47 @@ def add_profile(Name, Email, Password, prof_id=None):
             flash("Some Error has occured")
             return render_template("Signup.html")
 
+def add_message(msg):
+    final_msg = {
+            "message":msg,
+            "time":str(datetime.now().strftime("%d-%m-%y %H:%M:%S"))
+        }
+    try:
+        with open("messages.json","r+") as file:
+            prev_data = json.load(file)
+            prev_data['links'].append(final_msg)
+            file.seek(0)
+            json.dump(prev_data,file,indent=4)
+            file.close()
+            flash("Successful link Saving")
+            update_data()
+        return redirect('/')
+    except:
+        flash("Some Error Occured")
+        redirect('/')
+def extract_value(jsons):
+    try:
+        return int(jsons['value'])
+    except KeyError:
+        return 0
+
+def get_data(num=None):
+    ret = 3
+    if num is None:
+        ret=5
+    
+    with open('messages.json','r') as file:
+            total_data = json.load(file)
+            msg = total_data['links']
+            msg.sort(key=extract_value)
+            if len(msg)>ret:
+                return msg[:ret]
+            else:
+                return msg
+        
+
 if __name__ == "__main__":
-    name = input("Enter Name:")
-    print(get_info_by_userName(name))
+    print(get_data())
     #Email = input("\nEnter Email:")
     #Password = input("\nEnter password:")
     #add_profile(name,Email=Email,Password=Password)
