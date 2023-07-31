@@ -69,7 +69,7 @@ def update_data():
 
         with open('messages.json','w') as file:
             for jobject in data['links']:
-                jobject['value']= int((curr - datetime.strptime(jobject['time'],"%d-%m-%y %H:%M:%S")).total_seconds())
+                jobject['value']= (864000-int((curr - datetime.strptime(jobject['time'],"%d-%m-%y %H:%M:%S")).total_seconds()))
             
             json.dump(data,file,indent=4)
             file.close()
@@ -141,22 +141,21 @@ def extract_value(jsons):
         return 0
 
 def get_data(num=None):
-    ret = 3
     if num is None:
-        ret=5
+        num=3
     
     with open('messages.json','r') as file:
             total_data = json.load(file)
             msg = total_data['links']
-            msg.sort(key=extract_value)
-            if len(msg)>ret:
-                return msg[:ret]
+            msg.sort(key=extract_value,reverse=True)
+            if len(msg)>num:
+                return msg[:num]
             else:
                 return msg
         
 
 if __name__ == "__main__":
-    print(get_data())
+    update_data()
     #Email = input("\nEnter Email:")
     #Password = input("\nEnter password:")
     #add_profile(name,Email=Email,Password=Password)

@@ -6,7 +6,8 @@
     setInterval(data_reload,30000);
 
     function data_reload(){
-      $("#timer").load("{{url_for('Dash')}} #timer")
+
+      $("#timer").load("{{url_for('Dash')}} #timer");
     }
    
     function count_char(){
@@ -37,14 +38,16 @@
     }
 
 </script>
+
 {%endblock jscript%}
 {% block content %}
+
 <h3 id="timer"class="my-2"> Last Update :{{value}}</h3>
 <div class="mb-4">
     {% for msg in data %}
     <div class="flex mb-4">
         <div class="flex-1 w-full rounded-xl bg-gray-200 h-18">
-            <p class="mx-8 my-5 float-left">{{msg['message']}}</p>
+            <p class="mx-4 px-4 my-2 py-3 float-left" title="Time Left :{{msg['value']//3600}} Hours">{{msg['message']}}</p>
             <button type="button" class="float-right mx-8 my-6">Copy Text</button>
         </div>
     </div>

@@ -21,7 +21,7 @@ def Dash():
 
 @application.route('/files')
 def file_page():
-    return render_template("text_file.html")
+    return render_template("file.html",value=get_time(),data=get_data(7))
 
 @application.route('/login')
 def Login():
